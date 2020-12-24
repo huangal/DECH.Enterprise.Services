@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Bindings\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DECH.Enterprise.Services.Customers.OpenApi\DECH.Enterprise.Services.Customers.OpenApi.csproj" />
+    <ProjectReference Include="..\DECH.Enterprise.Services.Customers.Services\DECH.Enterprise.Services.Customers.Services.csproj" />
+    <ProjectReference Include="..\DECH.Enterprise.Services.Customers.DataAccess\DECH.Enterprise.Services.Customers.DataAccess.csproj" />
+    <ProjectReference Include="..\DECH.Enterprise.Services.Customers.Contracts\DECH.Enterprise.Services.Customers.Contracts.csproj" />
+  </ItemGroup>
+</Project>
