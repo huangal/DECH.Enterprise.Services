@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using DECH.Enterprise.Services.Customers.DataAccess;
 using DECH.Enterprise.Services.Customers.Ioc.Bindings;
 using Microsoft.AspNetCore.Builder;
@@ -23,7 +24,28 @@ namespace DECH.Enterprise.Services.Customers
         {
             services.AddHttpContextAccessor();
 
-            services.AddControllers();
+            //services.AddControllers();
+            services.AddControllers(options => {
+
+                //options.Filters.Add<AsyncPerformanceTrackerFilter>();
+                //options.Filters.Add<AsyncModelValidationAttribute>();
+
+
+            })
+            .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true)
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                options.JsonSerializerOptions.IgnoreNullValues = true;
+                options.JsonSerializerOptions.PropertyNamingPolicy = null;
+            });
+
+
+
+
+
+
+
             services.AddVersioning()
                 .RegisterServices(Configuration)
                 .AddAutoMapperConfig<Startup>()

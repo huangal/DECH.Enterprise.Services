@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using DECH.Enterprise.Services.Customers.OpenApi.Models;
 using DECH.Enterprise.Services.Customers.OpenApi;
+using System.Linq;
 
 namespace DECH.Enterprise.Services.Customers.Ioc.Bindings
 {
@@ -61,14 +62,14 @@ namespace DECH.Enterprise.Services.Customers.Ioc.Bindings
 
 
             //Add swagger eDocumentation
-            //app.UseReDoc(options =>
-            //{
-            //    options.SpecUrl = $"/{applicationUri}/swagger/{provider.ApiVersionDescriptions.Last().GroupName}/swagger.json";
-            //    options.DocumentTitle = "Banking.Customers";
-            //    options.ConfigObject = new Swashbuckle.AspNetCore.ReDoc.ConfigObject()
-            //    {
-            //    };
-            //});
+            app.UseReDoc(options =>
+            {
+                options.SpecUrl = $"/{applicationUri}/swagger/{provider.ApiVersionDescriptions.Last().GroupName}/swagger.json";
+                options.DocumentTitle = "Customers.API";
+                options.ConfigObject = new Swashbuckle.AspNetCore.ReDoc.ConfigObject()
+                {
+                };
+            });
         }
 
 

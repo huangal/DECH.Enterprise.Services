@@ -13,4 +13,7 @@
     <ProjectReference Include="..\DECH.Enterprise.Services.Customers.DataAccess\DECH.Enterprise.Services.Customers.DataAccess.csproj" />
     <ProjectReference Include="..\DECH.Enterprise.Services.Customers.Contracts\DECH.Enterprise.Services.Customers.Contracts.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="5.6.3" />
+  </ItemGroup>
 </Project>

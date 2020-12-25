@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace DECH.Enterprise.Services.Customers.Controllers.v1
     [ApiController]
     [ApiVersion("1.0")]
     [Produces("application/json")]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("v{version:apiVersion}/[controller]")]
     public class CustomersController : ControllerBase
     {
         private ICustomerService _dataService;
@@ -51,12 +52,14 @@ namespace DECH.Enterprise.Services.Customers.Controllers.v1
         //}
 
         /// <summary>
-        /// Get List of Customers
+        /// Get List of Customers with pagination filter.  Page size and page number.
+        /// Default 20
         /// </summary>
         /// <returns>List of Cutomer objects</returns>
         [HttpGet]
         //[Authorize(PolicyType.PartnerAccess)]
-        public async Task<IActionResult> GetAll([FromQuery] PaginationFilter filter)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CustomerModel>))]
+        public async Task<IActionResult> GetCustomers([FromQuery] PaginationFilter filter)
         {
 
             var validFilter = new PaginationFilter(filter.Page, filter.Size);
@@ -130,6 +133,7 @@ namespace DECH.Enterprise.Services.Customers.Controllers.v1
         /// <returns></returns>
         [HttpPost]
         // [ModelValidation]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerModel))]
         public async Task<IActionResult> CreateCustomer([FromBody] CustomerModel customer)
         {
             try
@@ -170,6 +174,7 @@ namespace DECH.Enterprise.Services.Customers.Controllers.v1
         /// <returns></returns>
         [HttpPut("{id}")]
         // [ModelValidation]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerModel))]
         public async Task<IActionResult> UpdateCustomer([FromBody] CustomerModel customer, [FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -194,9 +199,10 @@ namespace DECH.Enterprise.Services.Customers.Controllers.v1
         ///     
         /// </remarks>
         /// <param name="id"></param>
-        /// <returns></returns>
+        /// <response code="204">Delete has been successfully processed</response>
         [HttpDelete("{id}")]
         // [ModelValidation]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> DeleteCustomer([FromRoute] int id)
         {
             try
@@ -230,12 +236,13 @@ namespace DECH.Enterprise.Services.Customers.Controllers.v1
         ///     GET api/Customers/List/10
         ///     
         /// </remarks>
-        /// <param name="numberofrecords"></param>
+        /// <param name="count"></param>
         /// <returns></returns>
-        [HttpGet("List/{numberofrecords}")]
-        public async Task<IActionResult> GetList(int numberofrecords)
+        [HttpGet("List/{count}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CustomerModel>))]
+        public async Task<IActionResult> GetList(int count)
         {
-            var customers = await _dataService.GetCustomerListAsync(numberofrecords);
+            var customers = await _dataService.GetCustomerListAsync(count);
             if (!customers.Any()) return NotFound();
             else return Ok(customers);
 
@@ -247,19 +254,12 @@ namespace DECH.Enterprise.Services.Customers.Controllers.v1
         /// </summary>
         /// <returns></returns>
         [HttpGet("Count")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
         public IActionResult GetCount()
         {
             var count = _dataService.GetCustomersCount();
             return Ok(count);
         }
-
-        //// [ApiExplorerSettings(IgnoreApi = true)]
-        //[HttpGet("Report/{location}")]
-        //public async Task<IActionResult> GetReport(string location)
-        //{
-        //    var report = await _weatherManager.GetWeatherForecastAsync(location);
-        //    return Ok(report);
-        //}
 
 
         [ApiExplorerSettings(IgnoreApi = true)]
@@ -275,23 +275,23 @@ namespace DECH.Enterprise.Services.Customers.Controllers.v1
         }
 
 
-        [HttpPost("Decode")]
-        public IActionResult Decode([FromBody] string data)
-        {
-            string encrypted = "CfDJ8K3aWspf8pRNgo2HuquMzZl9kKzeSoZUILUFo90ADVzPmf5lJm7xhvvOIjtUZ_-D6ZYELZgj4iup_nPP-Stv6-OxJ4upTPrLL3_wwu7s2OPK298s2YoPoORhK70WYbbuRgP4PUWzO1ebRCgpX9J7j7zuji7xgE3tT0zJMfQX4mlU";
+        //[HttpPost("Decode")]
+        //public IActionResult Decode([FromBody] string data)
+        //{
+        //    string encrypted = "CfDJ8K3aWspf8pRNgo2HuquMzZl9kKzeSoZUILUFo90ADVzPmf5lJm7xhvvOIjtUZ_-D6ZYELZgj4iup_nPP-Stv6-OxJ4upTPrLL3_wwu7s2OPK298s2YoPoORhK70WYbbuRgP4PUWzO1ebRCgpX9J7j7zuji7xgE3tT0zJMfQX4mlU";
 
 
-            string decrypted;
+        //    string decrypted;
 
-            var isDectypted = _dataProtection.TryDecrypt(encrypted, out decrypted);
+        //    var isDectypted = _dataProtection.TryDecrypt(encrypted, out decrypted);
 
-            if (isDectypted) return Ok(decrypted);
-            return Unauthorized();
+        //    if (isDectypted) return Ok(decrypted);
+        //    return Unauthorized();
 
 
-            //var result = _dataProtection.Decrypt(data);
-            //return Ok(result);
-        }
+        //    //var result = _dataProtection.Decrypt(data);
+        //    //return Ok(result);
+        //}
 
     }
 }
