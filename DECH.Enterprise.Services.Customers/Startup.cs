@@ -64,7 +64,7 @@ namespace DECH.Enterprise.Services.Customers
 
             app.UsePathBase(pathBase);
 
-            app.CreateSeedData();
+            app.CreateSeedData(Configuration);
             app.UseSwaggerSettings(provider, pathBase);
     
             app.UseHttpsRedirection();
