@@ -107,6 +107,20 @@ namespace DECH.Enterprise.Services.Customers.Services
             return true;
         }
 
-
+        public async Task<CustomersResponse> GetCustomerListAsync(PaginationFilter validFilter)
+        {
+            CustomersResponse response = new CustomersResponse
+            {
+                Total = GetCustomersCount()
+            };
+            if (response.Total > 0)
+            {
+                response.Customers = await _context.Customers.ProjectTo<CustomerModel>(_mapperConfiguration)
+                    .Skip((validFilter.Page - 1) * validFilter.Size)
+                   .Take(validFilter.Size)
+                    .ToListAsync();
+            }
+            return response;
+        }
     }
 }

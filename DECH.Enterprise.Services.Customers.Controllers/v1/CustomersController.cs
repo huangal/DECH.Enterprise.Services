@@ -74,6 +74,26 @@ namespace DECH.Enterprise.Services.Customers.Controllers.v1
 
 
         /// <summary>
+        /// Get List of Customers with pagination filter.  Page size and page number.
+        /// Default 20
+        /// </summary>
+        /// <returns>List of Cutomer objects</returns>
+        [HttpGet("List")]
+        //[Authorize(PolicyType.PartnerAccess)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomersResponse))]
+        public async Task<IActionResult> GetCustomerList([FromQuery] PaginationFilter filter)
+        {
+
+            var validFilter = new PaginationFilter(filter.Page, filter.Size);
+
+            var response = await _dataService.GetCustomerListAsync(validFilter);
+
+            return response.Total <= 0 ? NotFound() : (IActionResult)Ok(response);
+
+        }
+
+
+        /// <summary>
         /// Get a single customer
         /// </summary>
         /// <remarks>

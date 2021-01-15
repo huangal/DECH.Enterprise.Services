@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DECH.Enterprise.Services.Customers.Contracts.Models
@@ -36,4 +37,15 @@ namespace DECH.Enterprise.Services.Customers.Contracts.Models
         public string Email { get; set; }
         [Required] public string Product { get; set; }
     }
+
+
+
+    public class CustomersResponse
+    {
+        public IEnumerable<CustomerModel> Customers { get; set; }
+        public int Total { get; set; }
+    }
+
+
+
 }

@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 
 namespace DECH.Enterprise.Services.Customers.Contracts.Models
@@ -62,6 +63,17 @@ namespace DECH.Enterprise.Services.Customers.Contracts.Models
         public string country { get; set; }
         public int sunrise { get; set; }
         public int sunset { get; set; }
+    }
+
+    public class WeatherForecast
+    {
+        public DateTime Date { get; set; }
+
+        public int TemperatureC { get; set; }
+
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+
+        public string Summary { get; set; }
     }
 
 

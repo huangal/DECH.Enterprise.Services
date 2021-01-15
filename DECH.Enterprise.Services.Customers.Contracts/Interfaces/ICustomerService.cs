@@ -10,6 +10,7 @@ namespace DECH.Enterprise.Services.Customers.Contracts.Interfaces
         Task<IEnumerable<CustomerModel>> GetCustomersAsync();
         Task<IEnumerable<CustomerModel>> GetCustomersAsync(PaginationFilter filter);
 
+        Task<CustomersResponse> GetCustomerListAsync(PaginationFilter filter);
 
         Task<IEnumerable<CustomerModel>> GetCustomerListAsync(int count);
         int GetCustomersCount();

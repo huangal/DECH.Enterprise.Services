@@ -24,34 +24,21 @@ namespace DECH.Enterprise.Services.Customers
         {
             services.AddHttpContextAccessor();
 
-            //services.AddControllers();
-            services.AddControllers(options => {
-
-                //options.Filters.Add<AsyncPerformanceTrackerFilter>();
-                //options.Filters.Add<AsyncModelValidationAttribute>();
-
-
-            })
-            .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true)
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                options.JsonSerializerOptions.IgnoreNullValues = true;
-                options.JsonSerializerOptions.PropertyNamingPolicy = null;
-            });
-
-
-
-
-
-
+            services.AddControllers()
+                    .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true)
+                    .AddJsonOptions(options =>
+                    {
+                        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                        options.JsonSerializerOptions.IgnoreNullValues = true;
+                        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+                    });
 
             services.AddVersioning()
-                .RegisterServices(Configuration)
-                .AddAutoMapperConfig<Startup>()
-                .AddSwaggerSettings(Configuration)
-                .AddAppAuthorization()
-                .AddDataProtection();
+                    .RegisterServices(Configuration)
+                    .AddAutoMapperConfig<Startup>()
+                    .AddSwaggerSettings(Configuration)
+                    .AddAppAuthorization()
+                    .AddDataProtection();
 
             services.AddDbContext<CustomersContext>(context => { context.UseInMemoryDatabase("Customers"); });
 
@@ -73,10 +60,12 @@ namespace DECH.Enterprise.Services.Customers
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UsePathBase("/warehouse");
+            string pathBase = "/warehouse";
+
+            app.UsePathBase(pathBase);
 
             app.CreateSeedData();
-            app.UseSwaggerSettings(provider);
+            app.UseSwaggerSettings(provider, pathBase);
     
             app.UseHttpsRedirection();
 

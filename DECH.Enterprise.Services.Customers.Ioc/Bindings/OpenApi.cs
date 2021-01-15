@@ -24,13 +24,11 @@ namespace DECH.Enterprise.Services.Customers.Ioc.Bindings
 
         }
 
-        public static void UseSwaggerSettings(this IApplicationBuilder app, IApiVersionDescriptionProvider provider)
+        public static void UseSwaggerSettings(this IApplicationBuilder app, IApiVersionDescriptionProvider provider, string pathBase, bool serializeAsV2 = false)
         {
-            string applicationUri = "warehouse";
-
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger( options => {
-                //options.SerializeAsV2 = false;
+                options.SerializeAsV2 = serializeAsV2;
                 options.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
                 {
                     swaggerDoc.Servers = new List<OpenApiServer>
@@ -47,7 +45,7 @@ namespace DECH.Enterprise.Services.Customers.Ioc.Bindings
                 // build a swagger endpoint for each discovered API version
                 foreach (var description in provider.ApiVersionDescriptions)
                 {
-                    options.SwaggerEndpoint($"/{applicationUri}/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+                    options.SwaggerEndpoint($"{pathBase}/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
                     options.DocumentTitle = "Customers.API";
                 }
 
@@ -64,7 +62,7 @@ namespace DECH.Enterprise.Services.Customers.Ioc.Bindings
             //Add swagger eDocumentation
             app.UseReDoc(options =>
             {
-                options.SpecUrl = $"/{applicationUri}/swagger/{provider.ApiVersionDescriptions.Last().GroupName}/swagger.json";
+                options.SpecUrl = $"{pathBase}/swagger/{provider.ApiVersionDescriptions.Last().GroupName}/swagger.json";
                 options.DocumentTitle = "Customers.API";
                 options.ConfigObject = new Swashbuckle.AspNetCore.ReDoc.ConfigObject()
                 {
