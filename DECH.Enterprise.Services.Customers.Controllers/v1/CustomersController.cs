@@ -38,20 +38,6 @@ namespace DECH.Enterprise.Services.Customers.Controllers.v1
         }
 
         /// <summary>
-        /// Get List of Customers
-        /// </summary>
-        /// <returns>List of Cutomer objects</returns>
-        //[HttpGet]
-        //[Authorize(PolicyType.PartnerAccess)]
-        //public async Task<IActionResult> GetCustomers()
-        //{
-        //    var customers = await _dataService.GetCustomersAsync();
-        //    if (!customers.Any()) return NotFound();
-        //    else return Ok(customers);
-
-        //}
-
-        /// <summary>
         /// Get List of Customers with pagination filter.  Page size and page number.
         /// Default 20
         /// </summary>
