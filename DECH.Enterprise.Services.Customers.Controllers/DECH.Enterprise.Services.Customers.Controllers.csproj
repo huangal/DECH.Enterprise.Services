@@ -25,8 +25,13 @@
     <ProjectReference Include="..\DECH.Enterprise.Services.Customers.Contracts\DECH.Enterprise.Services.Customers.Contracts.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
+    <ProjectReference Include="..\DECH.Enterprise.Services.Customers.Engines\DECH.Enterprise.Services.Customers.Engines.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="v1\" />
+    <Folder Include="Models\" />
+    <Folder Include="Mappers\" />
   </ItemGroup>
 </Project>

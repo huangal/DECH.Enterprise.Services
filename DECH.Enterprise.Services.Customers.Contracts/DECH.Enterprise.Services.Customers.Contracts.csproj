@@ -4,4 +4,11 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="ServiceStack.Api.OpenApi" Version="5.10.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Examples\" />
+  </ItemGroup>
 </Project>

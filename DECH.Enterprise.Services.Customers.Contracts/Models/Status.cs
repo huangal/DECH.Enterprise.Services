@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using System.Text.Json;
 
 namespace DECH.Enterprise.Services.Customers.Contracts.Models
@@ -33,4 +34,11 @@ namespace DECH.Enterprise.Services.Customers.Contracts.Models
             return JsonSerializer.Serialize(value);
         }
     }
+
+
+    public class HideApi
+    {
+       public List<string> Controllers { get; set; }
+    }
+
 }

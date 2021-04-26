@@ -13,7 +13,8 @@ namespace DECH.Enterprise.Services.Customers.Ioc.Bindings
     {
         public static IServiceCollection RegisterServices(this IServiceCollection services, IConfiguration configuration)
         {
-           
+            services.Configure<HideApi>(configuration.GetSection("HideApi"));
+
             services.AddSingleton<ICustomerService, CustomerService>();
 
             //services.AddSingleton<IAuthorizationHandler, PartnerAccessHandler>();

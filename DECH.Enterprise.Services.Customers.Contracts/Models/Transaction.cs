@@ -18,4 +18,5 @@ namespace DECH.Enterprise.Services.Customers.Contracts.Models
     {
         public Guid Value { get; set; } = Guid.NewGuid();
     }
+
 }

@@ -9,6 +9,12 @@ using Microsoft.Extensions.Options;
 using DECH.Enterprise.Services.Customers.OpenApi.Models;
 using DECH.Enterprise.Services.Customers.OpenApi;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using DECH.Enterprise.Services.Customers.Contracts.Models;
+using Swashbuckle.AspNetCore.Filters;
+using Swashbuckle.AspNetCore.Swagger;
+using DECH.Enterprise.Services.Customers.Contracts.Examples;
+using System.Reflection;
 
 namespace DECH.Enterprise.Services.Customers.Ioc.Bindings
 {
@@ -19,6 +25,21 @@ namespace DECH.Enterprise.Services.Customers.Ioc.Bindings
             services.AddTransient<IConfigureOptions<SwaggerGenOptions>, SwaggerConfigurationOptions>();
             services.Configure<ApiInfo>(configuration.GetSection("ApiInfo"));
             services.AddSwaggerGen();
+            // .AddSwaggerGenNewtonsoftSupport();
+
+          services.Configure<SwaggerOptions>(c => c.SerializeAsV2 = true);
+
+
+            return services;
+
+        }
+
+
+        public static IServiceCollection AddSwaggerExamplesData(this IServiceCollection services)
+        {
+            services.AddSwaggerExamplesFromAssemblyOf<CustomerModelExample>();
+            services.AddSwaggerExamplesFromAssemblyOf<CustomerModelExamples>();
+
 
             return services;
 
@@ -28,7 +49,10 @@ namespace DECH.Enterprise.Services.Customers.Ioc.Bindings
         {
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger( options => {
-                options.SerializeAsV2 = serializeAsV2;
+               // options.SerializeAsV2 = serializeAsV2;
+
+
+
                 options.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
                 {
                     swaggerDoc.Servers = new List<OpenApiServer>
@@ -71,6 +95,88 @@ namespace DECH.Enterprise.Services.Customers.Ioc.Bindings
         }
 
 
+    }
+
+
+    public class ControllerHidingConvention : IControllerModelConvention
+    {
+        public void Apply(ControllerModel controller)
+        {
+            if (controller.ControllerName == "Customers")
+            {
+                controller.ApiExplorer.IsVisible = false;
+            }
+        }
+    }
+
+    public class ActionHidingConvention : IActionModelConvention
+    {
+        private HideApi _hideApi;
+
+        public ActionHidingConvention(IConfiguration configuration)
+        {
+            _hideApi = configuration.GetSection("HideApi").Get<HideApi>();
+
+        }
+
+        public void Apply(ActionModel action)
+        {
+            if (IsExcluded(action.Controller.ControllerName))
+            {
+                action.ApiExplorer.IsVisible = false;
+            }
+        }
+
+        private bool IsExcluded( string value)
+        {
+            var controll = _hideApi.Controllers.FirstOrDefault(x => x.Equals(value, System.StringComparison.OrdinalIgnoreCase));
+
+            return controll != null;
+        }
+
+    }
+
+    public class EnableApiExplorerApplicationConvention : IApplicationModelConvention
+    {
+        public void Apply(ApplicationModel application)
+        {
+             //application.ApiExplorer.IsVisible = true;
+
+
+            foreach (var controller in application.Controllers)
+            {
+
+                if (controller.ControllerName.Equals("Customers"))
+                {
+                    controller.ApiExplorer.IsVisible = false;
+                }
+                else
+                {
+                    controller.ApiExplorer.IsVisible = true;
+                }
+            }
+
+
+
+
+            //var controller = application.Controllers.FirstOrDefault(x => x.ControllerName.Equals("Customers"));
+
+
+            //if (controller!= null)
+            //{
+            //    controller.ApiExplorer.IsVisible = false;
+            //}
+            //else
+            //{
+            //    controller.ApiExplorer.IsVisible = true;
+            //}
+
+
+            //if ( application.Controllers.     .Controller.ControllerName == "Customers")
+            //{
+            //    controller.ApiExplorer.IsVisible = false;
+            //}
+        }
     }
 
 }

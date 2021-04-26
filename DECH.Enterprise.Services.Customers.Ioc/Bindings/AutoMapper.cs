@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.Configuration;
+using DECH.Enterprise.Services.Customers.Controllers.Mappers;
 using DECH.Enterprise.Services.Customers.Services.Mappers;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,6 +21,7 @@ namespace DECH.Enterprise.Services.Customers.Ioc.Bindings
         {
             var cfg = new MapperConfigurationExpression();
             cfg.AddProfile<CustomerProfile>();
+            cfg.AddProfile<AccountProfile>();
 
             return new MapperConfiguration(cfg);
         }

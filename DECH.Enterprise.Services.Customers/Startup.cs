@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace DECH.Enterprise.Services.Customers
 {
@@ -24,7 +25,22 @@ namespace DECH.Enterprise.Services.Customers
         {
             services.AddHttpContextAccessor();
 
-            services.AddControllers()
+            //services.AddControllers()
+            //    .AddNewtonsoftJson(options =>
+            //    {
+            //        options.SerializerSettings.Converters.Add(new StringEnumConverter());
+            //    });
+            //    .AddFluentValidation();
+
+
+
+            services.AddControllers(options =>
+                    {
+                        //options.Conventions.Add(new ControllerHidingConvention());
+                         options.Conventions.Add(new ActionHidingConvention( Configuration));
+                        //options.Conventions.Add(new EnableApiExplorerApplicationConvention());
+                         
+                    })
                     .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true)
                     .AddJsonOptions(options =>
                     {
@@ -32,13 +48,39 @@ namespace DECH.Enterprise.Services.Customers
                         options.JsonSerializerOptions.IgnoreNullValues = true;
                         options.JsonSerializerOptions.PropertyNamingPolicy = null;
                     });
+                    //.AddNewtonsoftJson(options =>
+                    //{
+                    //    options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                    //});
+
+
+
+        //    .AddNewtonsoftJson(options =>
+        //     {
+        //         options.SerializerSettings.Converters.Add(new StringEnumConverter());
+        //     })
+        //.AddFluentValidation();
+
+
 
             services.AddVersioning()
                     .RegisterServices(Configuration)
                     .AddAutoMapperConfig<Startup>()
                     .AddSwaggerSettings(Configuration)
+                    .AddSwaggerExamplesData()
                     .AddAppAuthorization()
+                    .AddDefaultHealthChecks()
                     .AddDataProtection();
+
+
+           
+
+           // services.AddSwaggerExamples();
+
+            
+
+
+            //services.AddSwaggerExamplesFromAssemblyOf<Startup>();
 
             services.AddDbContext<CustomersContext>(context => { context.UseInMemoryDatabase("Customers"); });
 
@@ -64,8 +106,9 @@ namespace DECH.Enterprise.Services.Customers
 
             app.UsePathBase(pathBase);
 
+
             app.CreateSeedData(Configuration);
-            app.UseSwaggerSettings(provider, pathBase);
+            app.UseSwaggerSettings(provider, pathBase, true);
     
             app.UseHttpsRedirection();
 
@@ -83,6 +126,7 @@ namespace DECH.Enterprise.Services.Customers
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapDefaultHealthChecks();
                 endpoints.MapControllers();
             });
         }

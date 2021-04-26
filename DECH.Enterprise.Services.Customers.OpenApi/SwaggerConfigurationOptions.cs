@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using DECH.Enterprise.Services.Customers.OpenApi.Filters;
 using DECH.Enterprise.Services.Customers.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.PlatformAbstractions;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace DECH.Enterprise.Services.Customers.OpenApi
@@ -39,6 +43,26 @@ namespace DECH.Enterprise.Services.Customers.OpenApi
         /// <inheritdoc />
         public void Configure(SwaggerGenOptions options)
         {
+            options.SchemaFilter<DescribeEnumMemberValues>();
+
+            //options.ResolveConflictingActions(apiDesctions => apiDesctions.First());
+
+            // options.DocumentFilter<CustomSwaggerFilter>();
+
+
+            // options.MapType<AccountType>(c =>
+            //{
+            //    return new OpenApiSchema {type = "string", @enum = Enum.GetNames(typeof(AccountType)) };
+            //});
+
+
+
+            //options.MapType<AccountType>(() => new OpenApiSchema { Type = "string", Enum = Enum.GetNames(typeof(AccountType)) });
+
+
+            //  options.MapType<AccountType>(() => new OpenApiSchema { Type = "string", Enum = (IList<IOpenApiAny>)Enum.GetNames(typeof(AccountType)).ToList() });
+
+
 
             options.OperationFilter<SwaggerDefaultValues>();
             //options.OperationFilter<HeaderParameters>();
@@ -53,7 +77,18 @@ namespace DECH.Enterprise.Services.Customers.OpenApi
             // integrate xml comments
             XmlCommentsFiles.ForEach(file => options.IncludeXmlComments(file, includeControllerXmlComments: true));
 
-            options.CustomSchemaIds(x => $"Models.{x.Name}");
+            options.CustomSchemaIds(x =>
+             {
+                 if(Interfaces.Contains(x.Name))
+                     return  $"Interface.{x.Name}";
+                 else
+                 return  $"Model.{x.Name}";
+
+              });
+
+            options.ExampleFilters();
+
+
         }
 
         private OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
@@ -95,5 +130,17 @@ namespace DECH.Enterprise.Services.Customers.OpenApi
                 return Directory.GetFiles(basePath, "*.xml", SearchOption.TopDirectoryOnly).ToList();
             }
         }
+
+
+
+
+        private IEnumerable<string> Interfaces =>
+            new string[] { "AccountsQueryResponse", "CustomersResponse" };
+
     }
+
+    
+
+    
 }
+
